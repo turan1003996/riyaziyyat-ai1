@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyaziyyat Məsləhətçisi</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; text-align: center; }
+        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; resize: vertical; }
+        button { width: 100%; background: #3498db; color: white; border: none; padding: 12px; font-size: 18px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        button:hover { background: #2980b9; }
+        .result { margin-top: 20px; padding: 15px; background: #eef9f5; border-left: 5px solid #2ecc71; border-radius: 5px; white-space: pre-line; line-height: 1.6; font-size: 16px; color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📐 Riyaziyyat Məsələsi Həll Yolu Asistantı</h2>
+        <p>Başa düşmədiyiniz sualı və ya məsələni daxil edin:</p>
+        <form method="POST">
+            <textarea name="question" placeholder="Məsələn: 2x + 5 = 15 tənliyini necə həll edim?" required>{{ question if question }}</textarea>
+            <button type="submit">Həll Yolunu Göstər</button>
+        </form>
+
+        {% if response %}
+        <div class="result">
+            <h3>💡 Həll Yolu və İzah:</h3>
+            <div>{{ response }}</div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
