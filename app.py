@@ -27,8 +27,9 @@ def home():
         if user_question:
             try:
                 client = genai.Client(api_key=GEMINI_API_KEY)
+                # Model adı rəsmi tövsiyə olunan gemini-3.6-flash ilə dəyişdirildi
                 response = client.models.generate_content(
-                    model='gemini-2.5-flash',
+                    model='gemini-3.6-flash',
                     contents=user_question,
                     config=types.GenerateContentConfig(
                         system_instruction=SYSTEM_PROMPT
