@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <!-- SUALIN ƏTRAFLI KARTI -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge {% if question.q_type == 'Olimpiada Sualı' %}bg-primary{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1.5">
+                        {{ question.q_type }}
+                    </span>
+                    <span class="badge bg-light text-dark border rounded-pill px-3 py-1.5">{{ question.category }}</span>
+                </div>
+                <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ question.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+
+            <h3 class="fw-bold mb-3">{{ question.title }}</h3>
+
+            {% if question.content %}
+            <p class="text-dark fs-5 mb-4" style="line-height: 1.7; white-space: pre-line;">{{ question.content }}</p>
+            {% endif %}
+
+            {% if question.image_file %}
+            <div class="mb-4 text-center">
+                <img src="{{ url_for('static', filename='uploads/' + question.image_file) }}" class="img-fluid rounded-4 shadow-sm max-vh-50" alt="Sual Şəkli">
+            </div>
+            {% endif %}
+
+            <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    {{ question.author.username[0].upper() }}
+                </div>
+                <div>
+                    <div class="fw-bold text-dark">{{ question.author.username }}</div>
+                    <small class="text-muted">Müəllif</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- RƏY YAZMA BÖLMƏSİ (QORUNAN HİSSƏ) -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-pen text-primary me-2"></i>Cavab və ya Rəy Yaz</h5>
+
+            {% if current_user.is_authenticated %}
+                <!-- İSTİFADƏÇİ GİRİŞ EDİBSƏ: FORMA GÖRÜNÜR -->
+                <form action="{{ url_for('question_detail', q_id=question.id) }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <textarea name="content" class="form-control rounded-3 border-light bg-light" rows="3" placeholder="Həll yolunuzu və ya fikrinizi yazın (LaTeX dəstəklənir: $x^2$)..."></textarea>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <div>
+                            <input type="file" name="image" class="form-control form-control-sm rounded-3 border-light bg-light">
+                        </div>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                            <i class="fa-solid fa-paper-plane me-1"></i> Göndər (+5 Xal)
+                        </button>
+                    </div>
+                </form>
+            {% else %}
+                <!-- İSTİFADƏÇİ GİRİŞ ETMƏYİBSƏ: XƏBƏRDARLIQ MƏTNİ VƏ GİRİŞ DÜYMƏSİ -->
+                <div class="alert alert-warning border-0 rounded-4 p-4 text-center mb-0">
+                    <div class="mb-2">
+                        <i class="fa-solid fa-lock text-warning fs-2"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2">Rəy yazmaq üçün hesaba daxil olmalısınız</h6>
+                    <p class="text-muted small mb-3">Müzakirələrdə iştirak etmək, xal qazanmaq və həll yollarınızı paylaşmaq üçün daxil olun və ya qeydiyyatdan keçin.</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ url_for('login') }}" class="btn btn-dark btn-sm rounded-pill px-4 fw-semibold">Daxil Ol</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-dark btn-sm rounded-pill px-4 fw-semibold">Qeydiyyat</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- MÖVCUD RƏYLƏR SİYAHISI -->
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments me-2"></i>Müzakirələr ({{ comments|length }})</h5>
+
+        {% for c in comments %}
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 {% if c.is_pinned %}border-start border-4 border-warning bg-warning bg-opacity-10{% endif %}">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        {{ c.author.username[0].upper() }}
+                    </div>
+                    <span class="fw-bold text-dark small">{{ c.author.username }}</span>
+                    {% if c.is_pinned %}
+                    <span class="badge bg-warning text-dark rounded-pill px-2" style="font-size: 0.7rem;"><i class="fa-solid fa-thumbtack me-1"></i>Pin Edilib</span>
+                    {% endif %}
+                </div>
+                <small class="text-muted" style="font-size: 0.8rem;">{{ c.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+
+            {% if c.content %}
+            <p class="text-dark small mb-3" style="white-space: pre-line;">{{ c.content }}</p>
+            {% endif %}
+
+            {% if c.image_file %}
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='uploads/' + c.image_file) }}" class="img-fluid rounded-3 shadow-sm max-vh-40" alt="Rəy Şəkli">
+            </div>
+            {% endif %}
+
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                <a href="{{ url_for('like_comment', c_id=c.id) }}" class="btn btn-sm btn-light rounded-pill px-3 fw-semibold text-muted">
+                    <i class="fa-solid fa-heart me-1 {% if current_user in c.likes %}text-danger{% endif %}"></i> {{ c.likes|length }}
+                </a>
+
+                {% if current_user.is_authenticated and question.user_id == current_user.id %}
+                <a href="{{ url_for('pin_comment', c_id=c.id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                    <i class="fa-solid fa-thumbtack me-1"></i> {% if c.is_pinned %}Pini Çıxart{% else %}Pin Et{% endif %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-muted">
+            <p class="mb-0">Hələ heç bir cavab yazılmayıb. İlk cavabı siz yazın!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
