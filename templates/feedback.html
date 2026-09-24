@@ -2,29 +2,33 @@
 
 {% block content %}
 <div class="row justify-content-center my-4">
-    <div class="col-lg-8">
-        <div class="custom-card p-5 shadow-lg">
-            <h2 class="fw-bold text-primary mb-3"><i class="fa-solid fa-envelope-open-text me-2"></i>Bizə Təklif və ya Rəy Bildirin</h2>
-            <p class="text-secondary mb-4">Platformanın inkişafı, gördüyünüz xətalar və ya ideyalarınızla bağlı təkliflərinizi birbaşa rəhbərliyin email ünvanına göndərə bilərsiniz.</p>
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div class="rounded-circle bg-warning bg-opacity-10 text-warning d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                    <i class="fa-solid fa-lightbulb fs-2"></i>
+                </div>
+                <h3 class="fw-bold">Təklif və İradlarınız</h3>
+                <p class="text-muted small">Platformamızı inkişaf etdirmək üçün rəyləriniz bizim üçün çox dəyərlidir.</p>
+            </div>
 
-            <form action="https://formspree.io/f/xbjnqkyy" method="POST">
+            <form action="{{ url_for('feedback') }}" method="POST">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Adınız və Soyadınız</label>
-                    <input type="text" name="name" class="form-control rounded-3" required placeholder="Məs: Əli Əliyev">
+                    <label class="form-label fw-semibold small text-muted">Ad və Soyadınız</label>
+                    <input type="text" name="name" class="form-control rounded-3 border-light bg-light py-2" placeholder="Məs: Əli Əliyev" required>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Email Ünvanınız</label>
-                    <input type="email" name="email" class="form-control rounded-3" required placeholder="name@example.com">
+                    <label class="form-label fw-semibold small text-muted">E-poçt Ünvanı</label>
+                    <input type="email" name="email" class="form-control rounded-3 border-light bg-light py-2" placeholder="name@example.com" required>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Mövzu</label>
-                    <input type="text" name="subject" class="form-control rounded-3" required placeholder="Təklif / Xəta Bildirişi / Əməkdaşlıq">
-                </div>
+
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">Təklif və ya Rəyiniz</label>
-                    <textarea name="message" class="form-control rounded-3" rows="5" required placeholder="Fikirlərinizi ətraflı qeyd edin..."></textarea>
+                    <label class="form-label fw-semibold small text-muted">Təklif və ya Mesajınız</label>
+                    <textarea name="message" class="form-control rounded-3 border-light bg-light" rows="5" placeholder="Saytda görmək istədiyiniz yeni funksiyalar və ya qarşılaşdığınız çətinliklər..." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-gradient-warning w-100 py-3 rounded-3 fs-5">
+
+                <button type="submit" class="btn btn-warning w-100 py-2.5 rounded-3 fw-bold shadow-sm">
                     <i class="fa-solid fa-paper-plane me-2"></i> Mesajı Göndər
                 </button>
             </form>

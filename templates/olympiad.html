@@ -2,32 +2,33 @@
 
 {% block content %}
 <div class="row g-4">
-    <!-- Sual Paylaşım Formu -->
+    <!-- Sol Tərəf: Yeni Post Formu -->
     <div class="col-lg-4">
-        <div class="custom-card p-4 sticky-top" style="top: 20px; z-index: 10;">
-            <h4 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2">
-                <i class="fa-solid fa-circle-plus"></i> Post Əlavə Et
-            </h4>
+        <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 20px;">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-2">
+                    <i class="fa-solid fa-pen-to-square fs-5"></i>
+                </div>
+                <h5 class="fw-bold mb-0">Post Əlavə Et</h5>
+            </div>
+            
             <form action="{{ url_for('olympiad') }}" method="POST" enctype="multipart/form-data">
-                
-                <!-- Başlıq Hissəsi -->
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Başlıq</label>
-                    <input type="text" name="title" class="form-control rounded-3" required placeholder="Məs: RFO 2026 Cəbr Sualı">
+                    <label class="form-label fw-semibold small text-muted">Mövzu Başlığı</label>
+                    <input type="text" name="title" class="form-control rounded-3 border-light bg-light" required placeholder="Məs: Cəbr - Bərabərsizliklər">
                 </div>
 
-                <!-- Paylaşım Növü Hissəsi -->
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Paylaşım Növü</label>
-                    <select name="q_type" class="form-select rounded-3">
+                    <label class="form-label fw-semibold small text-muted">Paylaşım Növü</label>
+                    <select name="q_type" class="form-select rounded-3 border-light bg-light">
                         <option value="Olimpiada Sualı">🧩 Olimpiada Sualı</option>
                         <option value="Məsləhət / Tövsiyə">💡 Məsləhət / Tövsiyə</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Kateqoriya</label>
-                    <select name="category" class="form-select rounded-3">
+                    <label class="form-label fw-semibold small text-muted">Kateqoriya</label>
+                    <select name="category" class="form-select rounded-3 border-light bg-light">
                         <option value="Cəbr">Cəbr</option>
                         <option value="Həndəsə">Həndəsə</option>
                         <option value="Ədədlər Nəzəriyyəsi">Ədədlər Nəzəriyyəsi</option>
@@ -35,59 +36,70 @@
                         <option value="Ümumi/Məsləhət">Ümumi / Məsləhət</option>
                     </select>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Mətn (LaTeX dəstəkləyir: $x^2$)</label>
-                    <textarea name="content" class="form-control rounded-3" rows="4" placeholder="Sualın mətni və ya dərslə bağlı məsləhət/tövsiyə istəyiniz..."></textarea>
+                    <label class="form-label fw-semibold small text-muted">Mətn (LaTeX supported: $x^2$)</label>
+                    <textarea name="content" class="form-control rounded-3 border-light bg-light" rows="4" placeholder="Sualınızı və ya fikrinizi təfərrüatlı yazın..."></textarea>
                 </div>
+
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">Şəkil (İstəyə bağlı)</label>
-                    <input type="file" name="image" class="form-control rounded-3">
+                    <label class="form-label fw-semibold small text-muted">Şəkil Qoş (Opsional)</label>
+                    <input type="file" name="image" class="form-control rounded-3 border-light bg-light">
                 </div>
-                <button type="submit" class="btn btn-gradient-warning w-100 py-2 rounded-3">
+
+                <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold shadow-sm">
                     <i class="fa-solid fa-paper-plane me-2"></i> Paylaş
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Müzakirə Siyahısı -->
+    <!-- Sağ Tərəf: Forum Postları -->
     <div class="col-lg-8">
-        <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-list-check text-indigo"></i> Bütün Paylaşımlar
-        </h4>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">Müzakirə Forumu</h4>
+            <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-sm">{{ questions|length }} Mövzu</span>
+        </div>
 
         {% for q in questions %}
-            <div class="custom-card p-4 mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-danger{% else %}bg-info text-dark{% endif %} px-3 py-2 rounded-pill">
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 hover-top transition">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-primary{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1.5">
                         {{ q.q_type }}
                     </span>
-                    <small class="text-secondary fw-semibold">
-                        <i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d %H:%M') }}
-                    </small>
+                    <span class="badge bg-light text-dark border rounded-pill px-3 py-1.5">{{ q.category }}</span>
                 </div>
-                
-                <h5 class="fw-bold mt-2">
-                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-decoration-none text-dark">
-                        {{ q.title }}
-                    </a>
-                </h5>
-                
-                <p class="text-secondary text-truncate mb-3">{{ q.content }}</p>
-                
-                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                    <span class="small text-muted">
-                        Müəllif: <strong class="text-dark">{{ q.author.username }}</strong> | Kateqoriya: <span class="badge bg-light text-dark border">{{ q.category }}</span>
-                    </span>
-                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                        <i class="fa-regular fa-comment me-1"></i> Rəylər ({{ q.comments|length }})
-                    </a>
-                </div>
+                <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
             </div>
+
+            <h5 class="fw-bold mb-2">
+                <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-dark text-decoration-none">
+                    {{ q.title }}
+                </a>
+            </h5>
+
+            <p class="text-secondary small mb-3 text-truncate">{{ q.content }}</p>
+
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                        {{ q.author.username[0].upper() }}
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark small">{{ q.author.username }}</div>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('question_detail', q_id=q.id) }}" class="btn btn-light btn-sm rounded-pill px-3 fw-semibold text-primary">
+                    <i class="fa-regular fa-comments me-1"></i> {{ q.comments|length }} Cavab
+                </a>
+            </div>
+        </div>
         {% else %}
-            <div class="custom-card p-5 text-center text-muted">
-                <h5>Hələ heç bir paylaşım olunmayıb.</h5>
-            </div>
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center text-muted">
+            <h5>Hələ heç bir mövzu açılmayıb. İlk paylaşımı siz edin!</h5>
+        </div>
         {% endfor %}
     </div>
 </div>

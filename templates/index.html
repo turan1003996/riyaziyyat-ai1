@@ -1,105 +1,151 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- HERO BANNER -->
-<div class="p-5 rounded-5 text-white mb-5 shadow-lg position-relative overflow-hidden" 
-     style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e1b4b 100%);">
-    <div class="row align-items-center position-relative z-1 py-4">
+<!-- Hero Section -->
+<div class="card border-0 rounded-4 bg-gradient-primary text-white p-4 p-lg-5 mb-5 shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+    <div class="row align-items-center position-relative z-1">
         <div class="col-lg-7">
-            <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3">
-                <i class="fa-solid fa-star me-1"></i> Milli Riyaziyyat Platforması
+            <span class="badge bg-white bg-opacity-20 text-white px-3 py-2 rounded-pill fw-semibold mb-3">
+                <i class="fa-solid fa-sparkles me-1"></i> Riyaziyyat Həvəskarları İcması
             </span>
-            <h1 class="display-4 fw-extrabold mb-3">Zəkanızı İtiləyin, Olimpiada Zirvələrini Fəth Edin!</h1>
-            <p class="fs-5 opacity-90 mb-4">Mürəkkəb olimpiada suallarını müzakirə edin, fərqli həll yolları tapın və öz təcrübənizi digər riyaziyyat həvəskarları ilə bölüşün.</p>
-            <div class="d-flex gap-3 flex-wrap">
-                <a href="{{ url_for('olympiad') }}" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold shadow">
-                    <i class="fa-solid fa-circle-plus me-2"></i>Sual Paylaş / Soruş
+            <h1 class="display-5 fw-extrabold mb-3 text-white">Məntiqinizi İtləyin, Olimpiadalarda Parlayın!</h1>
+            <p class="lead opacity-90 mb-4">Mürəkkəb riyazi sualları müzakirə edin, təcrübəli olimpiadaçılardan məsləhət alın və biliklərinizlə liderlər sırasına yüksəlin.</p>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{{ url_for('olympiad') }}" class="btn btn-warning btn-lg fw-bold rounded-pill px-4 shadow">
+                    <i class="fa-solid fa-comments me-2"></i> Foruma Keç
                 </a>
-                <a href="{{ url_for('instructions') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
-                    <i class="fa-solid fa-book-open me-2"></i>Bələdçini Oxu
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg fw-semibold rounded-pill px-4">
+                    İcmaya Qoşul
                 </a>
             </div>
         </div>
-        <div class="col-lg-5 text-center mt-4 mt-lg-0">
-            <div class="bg-white bg-opacity-10 p-4 rounded-4 backdrop-blur border border-white border-opacity-20 shadow">
-                <h3 class="fw-bold mb-3"><i class="fa-solid fa-chart-line text-warning me-2"></i>İcma Statistikası</h3>
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="p-3 bg-white bg-opacity-20 rounded-3">
-                            <h2 class="fw-bold mb-0">{{ total_q }}</h2>
-                            <small class="text-light">Paylaşılan Sual</small>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="p-3 bg-white bg-opacity-20 rounded-3">
-                            <h2 class="fw-bold mb-0">{{ total_users }}</h2>
-                            <small class="text-light">Aktiv Üzv</small>
-                        </div>
-                    </div>
+        <div class="col-lg-5 d-none d-lg-block text-center">
+            <i class="fa-solid fa-square-root-variable text-white opacity-25" style="font-size: 14rem;"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Statistika Bölməsi -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 border-start border-4 border-primary">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                    <i class="fa-solid fa-circle-question fs-3"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="fw-bold mb-0">{{ total_q }}</h3>
+                    <small class="text-muted fw-semibold">Ümumi Suallar</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 border-start border-4 border-success">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
+                    <i class="fa-solid fa-users fs-3"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="fw-bold mb-0">{{ total_users }}</h3>
+                    <small class="text-muted fw-semibold">Aktiv Üzv</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 border-start border-4 border-warning">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+                    <i class="fa-solid fa-trophy fs-3"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="fw-bold mb-0">RFO</h3>
+                    <small class="text-muted fw-semibold">Olimpiada və İzah</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 text-center h-100 border-start border-4 border-info">
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <div class="rounded-circle bg-info bg-opacity-10 text-info p-3">
+                    <i class="fa-solid fa-bolt fs-3"></i>
+                </div>
+                <div class="text-start">
+                    <h3 class="fw-bold mb-0">24/7</h3>
+                    <small class="text-muted fw-semibold">Aktiv Müzakirə</small>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Əsas Məzmun Grid-i -->
 <div class="row g-4">
-    <!-- SON SUALLAR BÖLMƏSİ -->
+    <!-- Son Müzakirələr -->
     <div class="col-lg-8">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold m-0"><i class="fa-solid fa-fire text-danger me-2"></i>Son Əlavə Olunan Suallar</h3>
-            <a href="{{ url_for('olympiad') }}" class="btn btn-link text-decoration-none fw-bold">Hamısına Bax →</a>
+            <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-fire text-danger"></i> Son Paylaşımlar
+            </h4>
+            <a href="{{ url_for('olympiad') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Hamısına Bax</a>
         </div>
 
         {% for q in questions %}
-            <div class="custom-card p-4 mb-3 border-start border-4 {% if q.q_type == 'Olimpiada Sualı' %}border-danger{% else %}border-info{% endif %}">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-danger{% else %}bg-info text-dark{% endif %} px-3 py-2 rounded-pill">
-                        {{ q.q_type }}
-                    </span>
-                    <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-                </div>
-                <h5 class="fw-bold mt-2">
-                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-decoration-none text-dark">
-                        {{ q.title }}
-                    </a>
-                </h5>
-                <p class="text-secondary text-truncate mb-3">{{ q.content }}</p>
-                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                    <span class="small text-muted">Müəllif: <strong class="text-dark">{{ q.author.username }}</strong> | Kateqoriya: <strong>{{ q.category }}</strong></span>
-                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="btn btn-outline-primary btn-sm rounded-pill">
-                        Cavablar ({{ q.comments|length }})
-                    </a>
-                </div>
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 hover-top transition">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-primary{% else %}bg-warning text-dark{% endif %} px-3 py-2 rounded-pill fw-semibold">
+                    {{ q.q_type }}
+                </span>
+                <small class="text-muted">
+                    <i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d') }}
+                </small>
             </div>
+            <h5 class="fw-bold mt-2 mb-2">
+                <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-dark text-decoration-none hover-primary">
+                    {{ q.title }}
+                </a>
+            </h5>
+            <p class="text-secondary small text-truncate mb-3">{{ q.content }}</p>
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        {{ q.author.username[0].upper() }}
+                    </div>
+                    <span class="small fw-semibold text-dark">{{ q.author.username }}</span>
+                </div>
+                <span class="badge bg-light text-dark border rounded-pill px-3">{{ q.category }}</span>
+            </div>
+        </div>
         {% else %}
-            <div class="custom-card p-5 text-center text-muted">
-                <h5>Hələ heç bir sual əlavə edilməyib.</h5>
-            </div>
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center text-muted">
+            <p class="mb-0">Hələ heç bir paylaşım olunmayıb.</p>
+        </div>
         {% endfor %}
     </div>
 
-    <!-- SAKIN LİDERLƏRİLƏRİ -->
+    <!-- Liderlər Cədvəli (Sidebar) -->
     <div class="col-lg-4">
-        <div class="custom-card p-4">
-            <h4 class="fw-bold mb-4 text-warning d-flex align-items-center gap-2">
-                <i class="fa-solid fa-trophy"></i> Top İştirakçılar
-            </h4>
-            <div class="list-group list-group-flush">
+        <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 20px;">
+            <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-crown text-warning"></i> Top 5 Reytinq
+            </h5>
+            <div class="d-flex flex-column gap-3">
                 {% for u in top_users %}
-                    <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="fw-bold fs-5 text-secondary">#{{ loop.index }}</span>
-                            <div>
-                                <h6 class="fw-bold mb-0 text-dark">{{ u.username }}</h6>
-                                <small class="text-muted">Cəmi Xal</small>
-                            </div>
+                <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-light">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="fw-bold text-muted" style="width: 20px;">#{{ loop.index }}</span>
+                        <div>
+                            <div class="fw-bold text-dark small">{{ u.username }}</div>
+                            <small class="text-muted" style="font-size: 0.75rem;">{{ u.points }} xal</small>
                         </div>
-                        <span class="badge bg-warning text-dark rounded-pill fs-6 px-3 py-2 fw-bold">
-                            {{ u.points }} xal
-                        </span>
                     </div>
+                    {% if loop.index == 1 %}<i class="fa-solid fa-medal text-warning fs-5"></i>{% endif %}
+                </div>
                 {% endfor %}
             </div>
+            <a href="{{ url_for('leaderboard') }}" class="btn btn-light w-100 rounded-3 mt-4 fw-semibold text-primary">Tam Siyahı</a>
         </div>
     </div>
 </div>
