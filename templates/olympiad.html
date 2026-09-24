@@ -11,46 +11,58 @@
                 </div>
                 <h5 class="fw-bold mb-0">Post Əlavə Et</h5>
             </div>
-            
-            <form action="{{ url_for('olympiad') }}" method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-muted">Mövzu Başlığı</label>
-                    <input type="text" name="title" class="form-control rounded-3 border-light bg-light" required placeholder="Məs: Cəbr - Bərabərsizliklər">
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-muted">Paylaşım Növü</label>
-                    <select name="q_type" class="form-select rounded-3 border-light bg-light">
-                        <option value="Olimpiada Sualı">🧩 Olimpiada Sualı</option>
-                        <option value="Məsləhət / Tövsiyə">💡 Məsləhət / Tövsiyə</option>
-                    </select>
-                </div>
+            {% if current_user.is_authenticated %}
+                <form action="{{ url_for('olympiad') }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Mövzu Başlığı</label>
+                        <input type="text" name="title" class="form-control rounded-3 border-light bg-light" required placeholder="Məs: Cəbr - Bərabərsizliklər">
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-muted">Kateqoriya</label>
-                    <select name="category" class="form-select rounded-3 border-light bg-light">
-                        <option value="Cəbr">Cəbr</option>
-                        <option value="Həndəsə">Həndəsə</option>
-                        <option value="Ədədlər Nəzəriyyəsi">Ədədlər Nəzəriyyəsi</option>
-                        <option value="Kombinatorika">Kombinatorika</option>
-                        <option value="Ümumi/Məsləhət">Ümumi / Məsləhət</option>
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Paylaşım Növü</label>
+                        <select name="q_type" class="form-select rounded-3 border-light bg-light">
+                            <option value="Olimpiada Sualı">🧩 Olimpiada Sualı</option>
+                            <option value="Məsləhət / Tövsiyə">💡 Məsləhət / Tövsiyə</option>
+                        </select>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-muted">Mətn (LaTeX supported: $x^2$)</label>
-                    <textarea name="content" class="form-control rounded-3 border-light bg-light" rows="4" placeholder="Sualınızı və ya fikrinizi təfərrüatlı yazın..."></textarea>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Kateqoriya</label>
+                        <select name="category" class="form-select rounded-3 border-light bg-light">
+                            <option value="Cəbr">Cəbr</option>
+                            <option value="Həndəsə">Həndəsə</option>
+                            <option value="Ədədlər Nəzəriyyəsi">Ədədlər Nəzəriyyəsi</option>
+                            <option value="Kombinatorika">Kombinatorika</option>
+                            <option value="Ümumi/Məsləhət">Ümumi / Məsləhət</option>
+                        </select>
+                    </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold small text-muted">Şəkil Qoş (Opsional)</label>
-                    <input type="file" name="image" class="form-control rounded-3 border-light bg-light">
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Mətn (LaTeX dəstəklənir: $x^2$)</label>
+                        <textarea name="content" class="form-control rounded-3 border-light bg-light" rows="4" required placeholder="Sualınızı və ya fikrinizi təfərrüatlı yazın..."></textarea>
+                    </div>
 
-                <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold shadow-sm">
-                    <i class="fa-solid fa-paper-plane me-2"></i> Paylaş
-                </button>
-            </form>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-muted">Şəkil Qoş (Opsional)</label>
+                        <input type="file" name="image" class="form-control rounded-3 border-light bg-light">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 fw-bold shadow-sm">
+                        <i class="fa-solid fa-paper-plane me-2"></i> Paylaş
+                    </button>
+                </form>
+            {% else %}
+                <div class="alert alert-warning border-0 rounded-4 p-4 text-center mb-0">
+                    <i class="fa-solid fa-lock text-warning fs-2 mb-2"></i>
+                    <h6 class="fw-bold text-dark mb-2">Paylaşım etmək üçün hesaba daxil olun</h6>
+                    <p class="text-muted small mb-3">Sual paylaşmaq və paylaşılan suallara rəy yazmaq üçün hesabınıza daxil olmalısınız.</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ url_for('login') }}" class="btn btn-dark btn-sm rounded-pill px-4 fw-semibold">Daxil Ol</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-dark btn-sm rounded-pill px-4 fw-semibold">Qeydiyyat</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 
@@ -65,34 +77,24 @@
         <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 hover-top transition">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-primary{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1.5">
-                        {{ q.q_type }}
-                    </span>
+                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-primary{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1.5">{{ q.q_type }}</span>
                     <span class="badge bg-light text-dark border rounded-pill px-3 py-1.5">{{ q.category }}</span>
                 </div>
                 <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
             </div>
 
             <h5 class="fw-bold mb-2">
-                <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-dark text-decoration-none">
-                    {{ q.title }}
-                </a>
+                <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-dark text-decoration-none">{{ q.title }}</a>
             </h5>
-
             <p class="text-secondary small mb-3 text-truncate">{{ q.content }}</p>
 
             <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                 <div class="d-flex align-items-center gap-2">
-                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
-                        {{ q.author.username[0].upper() }}
-                    </div>
-                    <div>
-                        <div class="fw-bold text-dark small">{{ q.author.username }}</div>
-                    </div>
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">{{ q.author.username[0].upper() }}</div>
+                    <div><div class="fw-bold text-dark small">{{ q.author.username }}</div></div>
                 </div>
-
                 <a href="{{ url_for('question_detail', q_id=q.id) }}" class="btn btn-light btn-sm rounded-pill px-3 fw-semibold text-primary">
-                    <i class="fa-regular fa-comments me-1"></i> {{ q.comments|length }} Cavab
+                    <i class="fa-regular fa-comments me-1"></i> {{ q.comments|length }} Rəy
                 </a>
             </div>
         </div>
