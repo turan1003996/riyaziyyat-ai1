@@ -1,34 +1,106 @@
-<!DOCTYPE html>
-<html lang="az">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riyaziyyat Məsləhətçisi</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e50; text-align: center; }
-        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; resize: vertical; }
-        button { width: 100%; background: #3498db; color: white; border: none; padding: 12px; font-size: 18px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
-        button:hover { background: #2980b9; }
-        .result { margin-top: 20px; padding: 15px; background: #eef9f5; border-left: 5px solid #2ecc71; border-radius: 5px; white-space: pre-line; line-height: 1.6; font-size: 16px; color: #2c3e50; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>📐 Riyaziyyat Məsələsi Həll Yolu Asistantı</h2>
-        <p>Başa düşmədiyiniz sualı və ya məsələni daxil edin:</p>
-        <form method="POST">
-            <textarea name="question" placeholder="Məsələn: 2x + 5 = 15 tənliyini necə həll edim?" required>{{ question if question }}</textarea>
-            <button type="submit">Həll Yolunu Göstər</button>
-        </form>
+{% extends 'base.html' %}
 
-        {% if response %}
-        <div class="result">
-            <h3>💡 Həll Yolu və İzah:</h3>
-            <div>{{ response }}</div>
+{% block content %}
+<!-- HERO BANNER -->
+<div class="p-5 rounded-5 text-white mb-5 shadow-lg position-relative overflow-hidden" 
+     style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e1b4b 100%);">
+    <div class="row align-items-center position-relative z-1 py-4">
+        <div class="col-lg-7">
+            <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3">
+                <i class="fa-solid fa-star me-1"></i> Milli Riyaziyyat Platforması
+            </span>
+            <h1 class="display-4 fw-extrabold mb-3">Zəkanızı İtiləyin, Olimpiada Zirvələrini Fəth Edin!</h1>
+            <p class="fs-5 opacity-90 mb-4">Mürəkkəb olimpiada suallarını müzakirə edin, fərqli həll yolları tapın və öz təcrübənizi digər riyaziyyat həvəskarları ilə bölüşün.</p>
+            <div class="d-flex gap-3 flex-wrap">
+                <a href="{{ url_for('olympiad') }}" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold shadow">
+                    <i class="fa-solid fa-circle-plus me-2"></i>Sual Paylaş / Soruş
+                </a>
+                <a href="{{ url_for('instructions') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
+                    <i class="fa-solid fa-book-open me-2"></i>Bələdçini Oxu
+                </a>
+            </div>
         </div>
-        {% endif %}
+        <div class="col-lg-5 text-center mt-4 mt-lg-0">
+            <div class="bg-white bg-opacity-10 p-4 rounded-4 backdrop-blur border border-white border-opacity-20 shadow">
+                <h3 class="fw-bold mb-3"><i class="fa-solid fa-chart-line text-warning me-2"></i>İcma Statistikası</h3>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="p-3 bg-white bg-opacity-20 rounded-3">
+                            <h2 class="fw-bold mb-0">{{ total_q }}</h2>
+                            <small class="text-light">Paylaşılan Sual</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-white bg-opacity-20 rounded-3">
+                            <h2 class="fw-bold mb-0">{{ total_users }}</h2>
+                            <small class="text-light">Aktiv Üzv</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<div class="row g-4">
+    <!-- SON SUALLAR BÖLMƏSİ -->
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold m-0"><i class="fa-solid fa-fire text-danger me-2"></i>Son Əlavə Olunan Suallar</h3>
+            <a href="{{ url_for('olympiad') }}" class="btn btn-link text-decoration-none fw-bold">Hamısına Bax →</a>
+        </div>
+
+        {% for q in questions %}
+            <div class="custom-card p-4 mb-3 border-start border-4 {% if q.q_type == 'Olimpiada Sualı' %}border-danger{% else %}border-info{% endif %}">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-danger{% else %}bg-info text-dark{% endif %} px-3 py-2 rounded-pill">
+                        {{ q.q_type }}
+                    </span>
+                    <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+                <h5 class="fw-bold mt-2">
+                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-decoration-none text-dark">
+                        {{ q.title }}
+                    </a>
+                </h5>
+                <p class="text-secondary text-truncate mb-3">{{ q.content }}</p>
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                    <span class="small text-muted">Müəllif: <strong class="text-dark">{{ q.author.username }}</strong> | Kateqoriya: <strong>{{ q.category }}</strong></span>
+                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="btn btn-outline-primary btn-sm rounded-pill">
+                        Cavablar ({{ q.comments|length }})
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="custom-card p-5 text-center text-muted">
+                <h5>Hələ heç bir sual əlavə edilməyib.</h5>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- SAKIN LİDERLƏRİLƏRİ -->
+    <div class="col-lg-4">
+        <div class="custom-card p-4">
+            <h4 class="fw-bold mb-4 text-warning d-flex align-items-center gap-2">
+                <i class="fa-solid fa-trophy"></i> Top İştirakçılar
+            </h4>
+            <div class="list-group list-group-flush">
+                {% for u in top_users %}
+                    <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="fw-bold fs-5 text-secondary">#{{ loop.index }}</span>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ u.username }}</h6>
+                                <small class="text-muted">Cəmi Xal</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-warning text-dark rounded-pill fs-6 px-3 py-2 fw-bold">
+                            {{ u.points }} xal
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

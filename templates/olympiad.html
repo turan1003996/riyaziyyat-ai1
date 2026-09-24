@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Sual Paylaşım Formu -->
+    <div class="col-lg-4">
+        <div class="custom-card p-4 sticky-top" style="top: 20px; z-index: 10;">
+            <h4 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i> Post Əlavə Et
+            </h4>
+            <form action="{{ url_for('olympiad') }}" method="POST" enctype="multipart/form-data">
+                
+                <!-- Başlıq Hissəsi -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Başlıq</label>
+                    <input type="text" name="title" class="form-control rounded-3" required placeholder="Məs: RFO 2026 Cəbr Sualı">
+                </div>
+
+                <!-- Paylaşım Növü Hissəsi -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Paylaşım Növü</label>
+                    <select name="q_type" class="form-select rounded-3">
+                        <option value="Olimpiada Sualı">🧩 Olimpiada Sualı</option>
+                        <option value="Məsləhət / Tövsiyə">💡 Məsləhət / Tövsiyə</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Kateqoriya</label>
+                    <select name="category" class="form-select rounded-3">
+                        <option value="Cəbr">Cəbr</option>
+                        <option value="Həndəsə">Həndəsə</option>
+                        <option value="Ədədlər Nəzəriyyəsi">Ədədlər Nəzəriyyəsi</option>
+                        <option value="Kombinatorika">Kombinatorika</option>
+                        <option value="Ümumi/Məsləhət">Ümumi / Məsləhət</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Mətn (LaTeX dəstəkləyir: $x^2$)</label>
+                    <textarea name="content" class="form-control rounded-3" rows="4" placeholder="Sualın mətni və ya dərslə bağlı məsləhət/tövsiyə istəyiniz..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Şəkil (İstəyə bağlı)</label>
+                    <input type="file" name="image" class="form-control rounded-3">
+                </div>
+                <button type="submit" class="btn btn-gradient-warning w-100 py-2 rounded-3">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Paylaş
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Müzakirə Siyahısı -->
+    <div class="col-lg-8">
+        <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-list-check text-indigo"></i> Bütün Paylaşımlar
+        </h4>
+
+        {% for q in questions %}
+            <div class="custom-card p-4 mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge {% if q.q_type == 'Olimpiada Sualı' %}bg-danger{% else %}bg-info text-dark{% endif %} px-3 py-2 rounded-pill">
+                        {{ q.q_type }}
+                    </span>
+                    <small class="text-secondary fw-semibold">
+                        <i class="fa-regular fa-clock me-1"></i>{{ q.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </small>
+                </div>
+                
+                <h5 class="fw-bold mt-2">
+                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="text-decoration-none text-dark">
+                        {{ q.title }}
+                    </a>
+                </h5>
+                
+                <p class="text-secondary text-truncate mb-3">{{ q.content }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                    <span class="small text-muted">
+                        Müəllif: <strong class="text-dark">{{ q.author.username }}</strong> | Kateqoriya: <span class="badge bg-light text-dark border">{{ q.category }}</span>
+                    </span>
+                    <a href="{{ url_for('question_detail', q_id=q.id) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                        <i class="fa-regular fa-comment me-1"></i> Rəylər ({{ q.comments|length }})
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="custom-card p-5 text-center text-muted">
+                <h5>Hələ heç bir paylaşım olunmayıb.</h5>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

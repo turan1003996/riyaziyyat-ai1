@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-warning"><i class="fas fa-crown me-2"></i>Liderlər Lövhəsi</h2>
+                <p class="text-secondary">Olimpiada sualları paylaşaraq ən çox xal toplayan istifadəçilər.</p>
+            </div>
+
+            <div class="glass-card p-3 rounded-4">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th># Sıra</th>
+                                <th>İstifadəçi Adı</th>
+                                <th>Status</th>
+                                <th>Xallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in top_users %}
+                            <tr>
+                                <td class="fw-bold">{{ loop.index }}</td>
+                                <td class="fw-bold text-info">{{ user.username }}</td>
+                                <td>
+                                    {% if user.is_pro %}
+                                        <span class="badge bg-success">PRO</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Standart</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="badge bg-primary fs-6">{{ user.points }} Xal</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-secondary py-3">Heç bir istifadəçi tapılmadı.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

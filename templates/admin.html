@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h3 class="fw-bold text-white mb-4">Admin Panel - Gələn Ödənişlər</h3>
+    <div class="glass-card p-3 rounded-4 table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>İstifadəçi ID</th>
+                    <th>Plan</th>
+                    <th>Məbləğ</th>
+                    <th>Tranzaksiya ID</th>
+                    <th>Qəbz Faylı</th>
+                    <th>Tarix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td>#{{ p.id }}</td>
+                    <td>User #{{ p.user_id }}</td>
+                    <td><span class="badge bg-info">{{ p.plan }}</span></td>
+                    <td class="fw-bold text-success">{{ p.amount }} AZN</td>
+                    <td>{{ p.transaction_id if p.transaction_id else '-' }}</td>
+                    <td>
+                        {% if p.receipt_file %}
+                            <a href="{{ url_for('static', filename='uploads/' + p.receipt_file) }}" target="_blank" class="btn btn-sm btn-outline-warning rounded-pill">
+                                <i class="fas fa-file-invoice me-1"></i> Qəbzə Bax
+                            </a>
+                        {% else %}
+                            <span class="text-secondary small">Yüklənməyib</span>
+                        {% endif %}
+                    </td>
+                    <td class="small text-secondary">{{ p.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-secondary py-4">Hələ ki heç bir ödəniş edilməyib.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

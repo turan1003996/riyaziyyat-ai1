@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MathOlympiad — Riyaziyyat Portal{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-grad: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --accent-grad: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+            --bg-color: #f8fafc;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #cbd5e1 !important;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #38bdf8 !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-gradient-warning {
+            background: var(--accent-grad);
+            color: white;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.5);
+            color: white;
+        }
+
+        .custom-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        footer {
+            margin-top: auto;
+            background: #0f172a;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+                <i class="fa-solid fa-square-root-variable text-warning fs-3"></i>
+                <span>MathOlympiad</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav me-auto ms-lg-4">
+                    <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('home') }}"><i class="fa-solid fa-house me-1"></i> Ana Səhifə</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('olympiad') }}"><i class="fa-solid fa-comments me-1"></i> Olimpiada & Forum</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('instructions') }}"><i class="fa-solid fa-compass me-1"></i> Təlimat</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('feedback') }}"><i class="fa-solid fa-envelope-open-text me-1 text-info"></i> Təklif & Rəylər</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="{{ url_for('leaderboard') }}"><i class="fa-solid fa-trophy me-1"></i> Liderlər</a></li>
+                </ul>
+                <ul class="navbar-nav align-items-center gap-2">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="badge bg-primary bg-opacity-20 text-info border border-info border-opacity-20 px-3 py-2 rounded-pill fs-6">
+                                <i class="fa-solid fa-star text-warning me-1"></i>{{ current_user.username }} ({{ current_user.points }} Xal)
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-danger btn-sm rounded-pill px-3 ms-2" href="{{ url_for('logout') }}">Çıxış</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light btn-sm rounded-pill px-3 me-2" href="{{ url_for('login') }}">Giriş</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-gradient-warning btn-sm rounded-pill px-4" href="{{ url_for('register') }}">Qeydiyyat</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show rounded-4 shadow-sm border-0" role="alert">
+                        <i class="fa-solid fa-circle-info me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="py-4 text-center border-top border-secondary border-opacity-20 mt-5">
+        <div class="container">
+            <p class="mb-0 fw-semibold">© {{ datetime.utcnow().year }} MathOlympiad — Riyaziyyat Zəkalarının Birləşdiyi Məkan 🚀</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

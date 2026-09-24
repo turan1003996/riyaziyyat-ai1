@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-lg-8">
+        <div class="custom-card p-5 shadow-lg">
+            <h2 class="fw-bold text-primary mb-3"><i class="fa-solid fa-envelope-open-text me-2"></i>Bizə Təklif və ya Rəy Bildirin</h2>
+            <p class="text-secondary mb-4">Platformanın inkişafı, gördüyünüz xətalar və ya ideyalarınızla bağlı təkliflərinizi birbaşa rəhbərliyin email ünvanına göndərə bilərsiniz.</p>
+
+            <form action="https://formspree.io/f/xbjnqkyy" method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Adınız və Soyadınız</label>
+                    <input type="text" name="name" class="form-control rounded-3" required placeholder="Məs: Əli Əliyev">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email Ünvanınız</label>
+                    <input type="email" name="email" class="form-control rounded-3" required placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Mövzu</label>
+                    <input type="text" name="subject" class="form-control rounded-3" required placeholder="Təklif / Xəta Bildirişi / Əməkdaşlıq">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Təklif və ya Rəyiniz</label>
+                    <textarea name="message" class="form-control rounded-3" rows="5" required placeholder="Fikirlərinizi ətraflı qeyd edin..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-gradient-warning w-100 py-3 rounded-3 fs-5">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Mesajı Göndər
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
