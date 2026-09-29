@@ -1,37 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row justify-content-center my-4">
+<div class="row justify-content-center my-5">
     <div class="col-lg-7">
-        <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5">
-            <div class="text-center mb-4">
-                <div class="rounded-circle bg-warning bg-opacity-10 text-warning d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                    <i class="fa-solid fa-lightbulb fs-2"></i>
-                </div>
-                <h3 class="fw-bold">Təklif və İradlarınız</h3>
-                <p class="text-muted small">Platformamızı inkişaf etdirmək üçün rəyləriniz bizim üçün çox dəyərlidir.</p>
+        <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 text-center">
+            
+            <!-- İkon -->
+            <div class="rounded-circle bg-warning bg-opacity-10 text-warning d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px;">
+                <i class="fa-solid fa-envelope-open-text fs-1"></i>
             </div>
 
-            <form action="{{ url_for('feedback') }}" method="POST">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-muted">Ad və Soyadınız</label>
-                    <input type="text" name="name" class="form-control rounded-3 border-light bg-light py-2" placeholder="Məs: Əli Əliyev" required>
-                </div>
+            <!-- Başlıq və Mətn -->
+            <h3 class="fw-bold mb-3">Təklif və İradlarınız</h3>
+            <p class="text-muted fs-6 mb-4">
+                Platformamızı inkişaf etdirmək üçün rəyləriniz bizim üçün çox dəyərlidir. 
+                Hər hansı bir təklif, irad və ya sualınız varsa, birbaşa Gmail vasitəsilə e-poçt ünvanımıza yaza bilərsiniz:
+            </p>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-muted">E-poçt Ünvanı</label>
-                    <input type="email" name="email" class="form-control rounded-3 border-light bg-light py-2" placeholder="name@example.com" required>
-                </div>
+            <!-- Email Qutusu -->
+            <div class="p-3 bg-light rounded-3 border d-inline-block mx-auto mb-4">
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=turan.sahvaladov@gmail.com" target="_blank" class="text-decoration-none fw-bold fs-5 text-dark">
+                    <i class="fa-solid fa-envelope text-warning me-2"></i>
+                    turan.sahvaladov@gmail.com
+                </a>
+            </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold small text-muted">Təklif və ya Mesajınız</label>
-                    <textarea name="message" class="form-control rounded-3 border-light bg-light" rows="5" placeholder="Saytda görmək istədiyiniz yeni funksiyalar və ya qarşılaşdığınız çətinliklər..." required></textarea>
-                </div>
+            <!-- Birbaşa Gmail Açmaq Düyməsi -->
+            <div>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=turan.sahvaladov@gmail.com" target="_blank" class="btn btn-warning px-4 py-2.5 rounded-3 fw-bold shadow-sm">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Gmail ilə Məktub Göndər
+                </a>
+            </div>
 
-                <button type="submit" class="btn btn-warning w-100 py-2.5 rounded-3 fw-bold shadow-sm">
-                    <i class="fa-solid fa-paper-plane me-2"></i> Mesajı Göndər
-                </button>
-            </form>
         </div>
     </div>
 </div>
