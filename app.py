@@ -4,10 +4,20 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Mail, Message  # <-- Yeni əlavə olundu
 
-# 1. Tətbiqi yaradırıq
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'K9#mP$1!xL892@qz373FFDF'
+
+# FLASK-MAIL SAZLAMALARI (Gmail SMTP)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'turan.sahvaladov@gmail.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '')  # App Password
+app.config['MAIL_DEFAULT_SENDER'] = app.config['MAIL_USERNAME']
+
+mail = Mail(app)
 
 # Məlumat bazası sazlanması (SQLite)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -15,14 +25,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# DATETIME-I ŞABLONLARA TANITMAQ
+# Context processor
 @app.context_processor
 def inject_datetime():
     return dict(datetime=datetime)
 
-# -------------------------------------------------------------
-# MƏLUMAT BAZASI MODELLƏRİ
-# -------------------------------------------------------------
+# MODELLƏR
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -32,21 +40,18 @@ class User(UserMixin, db.Model):
     questions = db.relationship('Question', backref='author', lazy=True)
 
 class Question(db.Model):
-    id = db.Column(db.Integer, primary_primary_key=False, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    q_type = db.Column(db.String(50), default='Müzakirə') # 'Olimpiada Sualı' və s.
+    q_type = db.Column(db.String(50), default='Müzakirə')
     category = db.Column(db.String(50), default='Ümumi')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-# Məlumat bazasını avtomatik yaratmaq
 with app.app_context():
     db.create_all()
 
-# -------------------------------------------------------------
-# FLASK-LOGIN SAZLANMASI
-# -------------------------------------------------------------
+# FLASK-LOGIN
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -55,12 +60,9 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# -------------------------------------------------------------
-# MARŞRUTLAR (ROUTES)
-# -------------------------------------------------------------
+# MARŞRUTLAR
 @app.route('/')
 def home():
-    # index.html tərəfindən gözlənilən dinamik məlumatlar
     total_users = User.query.count()
     total_q = Question.query.count()
     questions = Question.query.order_by(Question.created_at.desc()).limit(10).all()
@@ -82,7 +84,6 @@ def olympiad():
 def leaderboard():
     return render_template('leaderboard.html')
 
-# GİRİŞ HİSSƏSİ (LOGIN)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -103,7 +104,6 @@ def login():
 
     return render_template('login.html')
 
-# QEYDİYYAT HİSSƏSİ (REGISTER)
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -126,7 +126,6 @@ def register():
             return redirect(url_for('register'))
 
         hashed_password = generate_password_hash(password, method='scrypt')
-        
         new_user = User(username=username, email=email, password=hashed_password, points=0)
         db.session.add(new_user)
         db.session.commit()
@@ -136,13 +135,17 @@ def register():
 
     return render_template('register.html')
 
-# ÇIXIŞ HİSSƏSİ (LOGOUT)
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('Hesabdan çıxış edildi.', 'info')
     return redirect(url_for('home'))
+
+# TƏKLİF VƏ İRADLARIN E-POÇTA GÖNDƏRİLMƏSİ (FEEDBACK)
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    return render_template('feedback.html')
 
 @app.route('/instructions')
 def instructions():
@@ -151,10 +154,6 @@ def instructions():
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     return render_template('reset_password.html')
-
-@app.route('/feedback', methods=['GET', 'POST'])
-def feedback():
-    return render_template('feedback.html')
 
 @app.route('/base')
 def base():
@@ -171,15 +170,7 @@ def admin():
 @app.route('/question/<int:q_id>', methods=['GET', 'POST'])
 def question_detail(q_id):
     question = Question.query.get_or_404(q_id)
-    if request.method == 'POST':
-        if not current_user.is_authenticated:
-            flash("Cavab/Rəy yazmaq üçün daxil olmalısınız!", "warning")
-            return redirect(url_for('login'))
-
-        content = request.form.get('content', '').strip()
-
     return render_template('question_detail.html', question=question)
 
-# -------------------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
